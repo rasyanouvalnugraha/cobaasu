@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" />
+
+    <title>Aca Mini Games</title>
+</head>
+
+<body>
+    <div id="app">
+        <div class="summary">
+            <h1 class="title">MATCH RESULT</h1>
+            <br />
+            <h1 id="inGame"></h1>
+            <h3 id="result"></h3>
+        </div>
+        <div class="games">
+            <div class="option" onclick="pickOption('🖐')">🖐</div>
+            <div class="option" onclick="pickOption('✌')">✌</div>
+            <div class="option" onclick="pickOption('✊')">✊</div>
+        </div>
+        <h3 id="score"></h3> <!-- Display score -->
+    </div>
+
+    <audio id="clickSound" src="dry-fart.mp3"></audio>
+
+    <script>
+        class Start {
+            constructor() {
+                this.playerName = "Player";
+                this.botName = "Botnya aca";
+                this.playerOption;
+                this.botOption;
+                this.winner = "";
+                this.playerScore = 0; // Initialize scores
+                this.botScore = 0;
+            }
+
+            get getBotOption() {
+                return this.botOption;
+            }
+
+            set setBotOption(option) {
+                this.botOption = option;
+            }
+
+            get getPlayerOption() {
+                return this.playerOption;
+            }
+
+            set setPlayerOption(option) {
+                this.playerOption = option;
+            }
+
+            botBrain() {
+                const option = ["🖐", "✌", "✊"];
+                const bot = option[Math.floor(Math.random() * option.length)];
+                return bot;
+            }
+
+            winCalculation() {
+                if (this.botOption == "🖐" && this.playerOption == "✌") {
+                    this.winner = this.playerName;
+                } else if (this.botOption == "🖐" && this.playerOption == "✊") {
+                    this.winner = this.botName;
+                } else if (this.botOption == "✌" && this.playerOption == "🖐") {
+                    this.winner = this.botName;
+                } else if (this.botOption == "✌" && this.playerOption == "✊") {
+                    this.winner = this.playerName;
+                } else if (this.botOption == "✊" && this.playerOption == "🖐") {
+                    this.winner = this.playerName;
+                } else if (this.botOption == "✊" && this.playerOption == "✌") {
+                    this.winner = this.botName;
+                } else {
+                    this.winner = "SERI";
+                }
+
+                // Update scores
+                if (this.winner === this.playerName) {
+                    this.playerScore++;
+                } else if (this.winner === this.botName) {
+                    this.botScore++;
+                }
+            }
+
+            matchResult() {
+                if (this.winner != "SERI") {
+                    return `${this.winner} MENANG!`;
+                } else {
+                    return `WLEEEEE ${this.winner}, ga ada yang menang der`;
+                }
+            }
+
+            getScore() {
+                return `${this.playerName}: ${this.playerScore} - ${this.botName}: ${this.botScore}`;
+            }
+        }
+
+        function playClickSound() {
+            const clickSound = document.getElementById("clickSound");
+            clickSound.play();
+        }
+
+        function pickOption(option) {
+            playClickSound();
+
+            const start = new Start();
+            start.setPlayerOption = option;
+            start.setBotOption = start.botBrain();
+            start.winCalculation();
+
+            const inGame = document.getElementById("inGame");
+            const result = document.getElementById("result");
+            const score = document.getElementById("score");
+
+            inGame.textContent = "...";
+            result.textContent = "...";
+            score.textContent = start.getScore(); // Update score
+
+            setTimeout(() => {
+                inGame.textContent = `${start.getPlayerOption} VS ${start.getBotOption}`;
+                result.textContent = start.matchResult();
+                score.textContent = start.getScore(); // Update score after displaying result
+            }, 200);
+        }
+    </script>
+</body>
+
+</html>
